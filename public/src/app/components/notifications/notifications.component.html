@@ -1,0 +1,29 @@
+<mat-accordion>
+  <mat-expansion-panel hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Rides Avaliable: {{avaliableRides.length}}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div *ngFor="let ride of avaliableRides;">
+      <span style="margin-right: 1rem;">Driver: {{ride.username}}</span>
+      <span style="margin-right: 1rem;">Origin: {{ride.origin}}</span>
+      <span style="margin-right: 1rem;">Destination: {{ride.destination}}</span>
+      <span style="margin-right: 1rem;">Date: {{ride.destination}}</span>
+      <span>Passengers: {{ride.seats}}</span>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Passengers Avaliable: {{avaliablePassengers.length}}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div *ngFor="let passenger of avaliablePassengers;">
+      <span style="margin-right: 1rem;">Passenger: {{passenger.username}}</span>
+      <span style="margin-right: 1rem;">Origin: {{passenger.origin}}</span>
+      <span style="margin-right: 1rem;">Destination: {{passenger.destination}}</span>
+      <span>Date: {{passenger.date}}</span>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

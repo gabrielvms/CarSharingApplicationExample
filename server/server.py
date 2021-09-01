@@ -1,4 +1,3 @@
-from models.ride import Ride
 from flask import Flask, Response, request
 from flask_cors import CORS
 from time import sleep
@@ -10,12 +9,22 @@ from models.interest import Interest
 from models.ride import Ride
 from models.user import User
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path="")
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 rideService = RideService()
 
 @app.route("/")
 def home():
     return "Server is running"
+
+@app.route("/sign-up", methods=["POST"])
+def signUp():
+    data = json.loads(request.data)
+    username = rideService.signUp(data['user'])
+    if username != -1:
+        return json.dumps(username), 200
+    else:
+        return "Something Went Wrong", 500
 
 @app.route("/rides")
 def getRides():
@@ -32,7 +41,7 @@ def addRide():
     data = json.loads(request.data)
     rideId = rideService.addRide(data['ride'])
     if int(rideId) > -1:
-        return rideId, 200
+        return json.dumps(rideId), 200
     else:
         return "Something Went Wrong", 500
 
@@ -41,7 +50,7 @@ def removeRide():
     data = json.loads(request.data)
     rideId = rideService.removeRide(data['rideId'])
     if int(rideId) > -1:
-        return rideId, 200
+        return json.dumps(rideId), 200
     else:
         return "Something Went Wrong", 500
 
@@ -60,7 +69,7 @@ def addInterest():
     data = json.loads(request.data)
     interestId = rideService.addInterest(data['interest'])
     if int(interestId) > -1:
-        return interestId, 200
+        return json.dumps(interestId), 200
     else:
         return "Something Went Wrong", 500
 
@@ -69,7 +78,7 @@ def removeInterest():
     data = json.loads(request.data)
     interestId = rideService.removeInterest(data['interestId'])
     if int(interestId) > -1:
-        return interestId, 200
+        return json.dumps(interestId), 200
     else:
         return "Something Went Wrong", 500
 
@@ -78,12 +87,18 @@ def stream(username):
     def eventStream():
         while True:
             clientInterests = rideService.getInterestsByUser(username)
+            clientRides = rideService.getRidesByUser(username)
+
             ridesForClientInterests = []
             for interest in clientInterests:
                 ridesForClientInterests.extend(rideService.getRidesByInterest(interest))
                 
-            yield json.dumps([clientInterests, ridesForClientInterests])
-            sleep(1)
+            interestsForClientRides = []
+            for ride in clientRides:
+                interestsForClientRides.extend(rideService.getInterestsByRide(ride))
+
+            yield f"event: message\ndata: {json.dumps({'rides':ridesForClientInterests, 'interests': interestsForClientRides})}\n\n"
+            sleep(3)
     
     return Response(eventStream(), mimetype="text/event-stream")
 

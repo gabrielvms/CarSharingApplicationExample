@@ -1,0 +1,20 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button class="example-icon" [matMenuTriggerFor]="menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="rides" >
+      <mat-icon>directions_car</mat-icon>
+      <span>All Rides</span>
+    </button>
+    <button mat-menu-item routerLink="interests" >
+      <mat-icon>emoji_people</mat-icon>
+      <span>All Interests</span>
+    </button>
+
+  </mat-menu>
+  <span style="margin-right: 3px;">RideApp</span>
+  <mat-icon>emoji_transportation</mat-icon>
+  <span class="example-spacer"></span>
+  <span>{{user.username}}</span>
+</mat-toolbar>

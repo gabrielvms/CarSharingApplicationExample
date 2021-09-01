@@ -12,7 +12,7 @@ class RideService:
     def signUp(self, _user):
         try:
             user = User(_user)
-            self.users.append()
+            self.users.append(user)
             return user.username
         
         except:
